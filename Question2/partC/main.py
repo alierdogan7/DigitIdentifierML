@@ -62,6 +62,17 @@ def main(args):
     print("%d correct predictions over %d samples" % (correct, len(testing_real_labels)))
     print("Overall accuracy is %f" % (float(correct) * 100 / len(testing_real_labels)))
 
+    testing_real_labels = list(map(lambda x: int(x), testing_real_labels))
+    print("\n\n--------------\n\nConfusion matrix\n\n", confusion_matrix(testing_real_labels, testing_predicted_labels))
+
+    print('Accuracy:', accuracy_score(testing_real_labels, testing_predicted_labels))
+    print('F1 score:', f1_score(testing_real_labels, testing_predicted_labels, average='weighted'))
+    print('Recall:', recall_score(testing_real_labels, testing_predicted_labels,
+                                  average='weighted'))
+    print('Precision:', precision_score(testing_real_labels, testing_predicted_labels,
+                                        average='weighted'))
+    print('\n clasification report:\n', classification_report(testing_real_labels, testing_predicted_labels))
+
 
 def part_c_generate_classifier(digit):
     dataset = convert_csv_to_dataset_partC(digit)
@@ -110,56 +121,6 @@ def convert_csv_to_dataset_partC(digit):
 
     return dataset
 
-
-def convert_csv_to_dataset_3and8s(filepath):
-    dataset = {'training': {'x': [], 'y': []},
-               'cv': {'x': [], 'y': []},
-               'testing': {'x': [], 'y': []}}
-    threes = []
-    eights = []
-
-    with open(filepath, 'r') as file:
-        for line in csv.reader(file):
-            tmp = list(map(lambda x: float(x), line[:-1]))
-            if line[-1] == '3':
-                threes.append(tmp) #if 3, label it 0
-            elif line[-1] == '8':
-                eights.append(tmp) #if 3, label it 1
-            else:
-                continue #just pass
-
-    random.shuffle(threes)
-    random.shuffle(eights)
-
-    # separating into 48% / 32% / 20% , Training, CV, Testing respectively
-    cv_set_offset_digits = int(len(threes) * 0.50)
-    cv_set_offset_8s = int(len(eights) * 0.50)
-
-    testing_set_offset_3s = int(len(threes) * 0.80)
-    testing_set_offset_8s = int(len(eights) * 0.80)
-
-    # Digit 3 is y=0, Digit 8 is y=1
-    training_3s, cv_3s, testing_3s = threes[:cv_set_offset_3s], threes[cv_set_offset_3s:testing_set_offset_3s], \
-                                     threes[testing_set_offset_3s:]
-    training_8s, cv_8s, testing_8s = eights[:cv_set_offset_8s], eights[cv_set_offset_8s:testing_set_offset_8s], \
-                                     eights[testing_set_offset_8s:]
-
-    dataset['training']['x'] += training_3s
-    dataset['training']['y'] += [0] * len(training_3s)
-    dataset['training']['x'] += training_8s
-    dataset['training']['y'] += [1] * len(training_8s)
-
-    dataset['cv']['x'] += cv_3s
-    dataset['cv']['y'] += [0] * len(cv_3s)
-    dataset['cv']['x'] += cv_8s
-    dataset['cv']['y'] += [1] * len(cv_8s)
-
-    dataset['testing']['x'] += testing_3s
-    dataset['testing']['y'] += [0] * len(testing_3s)
-    dataset['testing']['x'] += testing_8s
-    dataset['testing']['y'] += [1] * len(testing_8s)
-
-    return dataset
 
 
 if __name__ == "__main__":
