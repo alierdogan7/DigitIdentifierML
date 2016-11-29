@@ -16,4 +16,23 @@ def plot_barchart():
     plt.title("Accuracy of Linear SVM over different C parameters")
     plt.show()
 
-plot_barchart()
+
+def surface_plot():
+    from mpl_toolkits.mplot3d import Axes3D
+    C = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000]
+    p = [2, 3, 4, 5, 6]
+    Z = [
+        [50.5, 50.5, 50.5, 90.4, 95.7, 96.7, 97.13, 97.13],
+        [50.5, 50.5, 50.5, 92.3, 96.2, 96.7, 97.23, 97.23],
+        [50.5, 50.5, 50.5, 93.12, 96.89, 97.33, 97.16, 97.16],
+        [50.5, 50.5, 56.4, 93.7, 97.6, 97.4, 97.4, 97.4],
+        [50.5, 50.5, 67.9, 94.3, 97.7, 97.3, 97.3, 97.3]
+      ]
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    Axes3D.plot_surface(ax, C, p, Z)
+    plt.show()
+
+
+# plot_barchart()
+surface_plot()
